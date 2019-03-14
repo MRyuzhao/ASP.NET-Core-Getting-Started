@@ -1,0 +1,32 @@
+﻿@using CoreDemo.ViewModels
+@model HomeIndexViewModel
+
+<!DOCTYPE html>
+<html>
+<head>
+
+</head>
+
+<body>
+    <h1>students</h1>
+    <ul>
+        @foreach (var s in Model.Students)
+        {
+            <li>
+                @s.Name (@s.Age)
+                @*<a href="/Home/Detail/@s.Id">Detail</a>*@
+                @*@Html.ActionLink("detail","Detail",new {id=s.Id})*@
+                <a asp-action="Detail" asp-route-id="@s.Id">detail</a>
+            </li>
+        }
+    </ul>
+
+    <div>
+        <a asp-action="Create">Add</a>
+
+        @await Component.InvokeAsync("DetailCount", new { id = 2 });
+        <vc:detail-count id="1"></vc:detail-count>
+    </div>
+</body>
+
+</html>
