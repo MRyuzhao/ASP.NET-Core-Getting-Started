@@ -17,7 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CoreDemo.Models\CoreDemo.Models.csproj" />
+    <ProjectReference Include="..\EfCore.Data\EfCore.Data.csproj" />
+    <ProjectReference Include="..\EfCore.Models\EfCore.Domain.csproj" />
   </ItemGroup>
 
 </Project>

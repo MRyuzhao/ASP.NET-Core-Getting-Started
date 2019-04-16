@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using EfCore.Common.Enums;
 
 namespace CoreDemo.Models
 {

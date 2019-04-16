@@ -1,12 +1,17 @@
-﻿using CoreDemo.Models;
+﻿using System.IO;
 using CoreDemo.Services;
 using CoreDemo.Settings;
+using EfCore.Data;
+using EfCore.Domain;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 
 namespace CoreDemo
@@ -25,9 +30,39 @@ namespace CoreDemo
         {
             services.AddMvc();
 
-            services.AddSingleton<IRepository<Student>, InMomoryRepository>();
+            services.AddDbContext<MyContext>(options =>
+            {
+                options.EnableSensitiveDataLogging(true);
+                options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection"), opts =>
+                    {
+                        opts.MaxBatchSize(1000);
+                    });
+            }, ServiceLifetime.Transient);
+
+            services.AddScoped<IRepository<Student>, EfCoreRepository>();
 
             services.Configure<ConnectionOptions>(_configuration.GetSection("ConnectionStrings"));
+
+            services.AddDbContext<IdentityDbContext>(opts =>
+            {
+                opts.UseSqlServer(_configuration.GetConnectionString("DefaultConnection"),
+                    b => b.MigrationsAssembly("CoreDemo"));
+            });
+
+            services.AddDefaultIdentity<IdentityUser>()
+                .AddEntityFrameworkStores<IdentityDbContext>();
+
+            services.Configure<IdentityOptions>(opts =>
+            {
+                opts.Password.RequireDigit = false;
+                opts.Password.RequireLowercase = false;
+                opts.Password.RequireNonAlphanumeric = false;
+                opts.Password.RequireUppercase = false;
+                opts.Password.RequiredLength = 1;
+                opts.Password.RequiredUniqueChars = 1;
+
+                opts.User.RequireUniqueEmail = false;
+            });
         }
 
         //处理http请求
@@ -49,8 +84,23 @@ namespace CoreDemo
                 });
             }
 
+            app.Use(async (context, next) =>
+            {
+                logger.LogInformation($"==>begin in {env.EnvironmentName}");
+                await next();
+            });
+
             app.UseStatusCodePages();
+
             app.UseStaticFiles();
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                RequestPath = "/node_modules",
+                FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "node_modules"))
+            });
+
+            app.UseAuthentication();
 
             app.UseMvc(builder =>
                 {

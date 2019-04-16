@@ -1,18 +1,7 @@
-﻿@model CoreDemo.Models.Student
-
-<!DOCTYPE html>
-
-<html>
-<head>
-    <title>title</title>
-</head>
-<body>
-    <div>
-        <h1>Id: @Model.Id</h1>
-        <h1>Name： @Model.FirstName @Model.LastName</h1>
-        <h1>Gender: @Model.Gender</h1>
-        <h1>Birthday: @Model.Birthday</h1>
-        <a asp-action="Index">return home</a> 
-    </div>
-</body>
-</html>
+﻿<div>
+    <h1>Id: @Model.Id</h1>
+    <h1>Name： @Model.FirstName @Model.LastName</h1>
+    <h1>Gender: @Model.Gender</h1>
+    <h1>Birthday: @Model.Birthday</h1>
+    <a asp-action="Index">return home</a>
+</div>

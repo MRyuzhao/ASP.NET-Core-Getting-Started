@@ -1,7 +1,7 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
+using EfCore.Common.Enums;
 
-namespace CoreDemo.Models
+namespace EfCore.Domain
 {
     public class Student
     {

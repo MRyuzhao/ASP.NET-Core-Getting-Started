@@ -1,0 +1,6 @@
+﻿@model StudentViewModel
+
+<tr>
+    <td>@Model.Name</td>
+    <td>@Model.Age (<a asp-action="Detail" asp-route-id="@Model.Id">detail</a>)</td>
+</tr>

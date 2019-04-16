@@ -1,0 +1,66 @@
+﻿@using Microsoft.AspNetCore.Identity
+<!DOCTYPE html>
+
+@inject SignInManager<IdentityUser> SignInManager
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+
+    <environment include="Development">
+        <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.css" 
+              rel="stylesheet"
+              asp-fallback-href="css/all.min.css"
+              asp-fallback-test-class="sr-only">
+    </environment>
+    <environment exclude="Development">
+        <link href="js/all.min.js" />
+        <link href="css/all.min.css" />
+    </environment>
+
+</head>
+<body>
+    <nav class="navbar navbar-light bg-light">
+        <span class="navbar-brand mb-0 h1">Navbar</span>
+        <ul class="navbar-nav mr-auto">
+            
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <form asp-controller="Account" asp-action="LoginOut" method="post" id="logoutForm">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a href="javascript:document.getElementById('logoutForm').submit()">登出</a>
+                        </li>
+                    </ul>
+                </form>
+            }
+            else
+            {
+                <li class="nav-item">
+                    <a asp-controller="Account" asp-action="Register">注册</a>
+                </li>
+                <li class="nav-item">
+                    <a asp-controller="Account" asp-action="Login">登录</a>
+                </li>
+            }
+
+        </ul>
+    </nav>
+    <div>
+        @RenderBody()
+    </div>
+
+    <hr />
+
+    <div>
+        @RenderSection("bottom", required: false)
+    </div>
+    @*@await Component.InvokeAsync("Welcome");*@
+
+    <vc:welcome></vc:welcome>
+
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/core.js"></script>
+    <script src="https://cdn.bootcss.com/jquery-validate/1.19.0/additional-methods.js"></script>
+</body>
+</html>
